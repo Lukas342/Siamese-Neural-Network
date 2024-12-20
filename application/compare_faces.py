@@ -18,6 +18,7 @@ import add_database
 
 def compare_faces():
     global cap
+
     ########## SETUP ##########
     #customtkinter.set_default_color_theme("dark-blue")
     customtkinter.set_appearance_mode("dark")
@@ -51,7 +52,7 @@ def compare_faces():
         def call(self, input_embedding, validation_embedding):
             return tf.math.abs(input_embedding - validation_embedding)
 
-    siamese_model = tf.keras.models.load_model("siamesemodel_2.h5", custom_objects={"L1Dist":L1Dist, "BinaryCrossentropy":tf.losses.BinaryCrossentropy})
+    siamese_model = tf.keras.models.load_model("siamese_model.h5", custom_objects={"L1Dist":L1Dist, "BinaryCrossentropy":tf.losses.BinaryCrossentropy})
 
 
     def preprocess(file_path):
@@ -177,121 +178,4 @@ def compare_faces():
     input_label.grid(row=2, column=2, sticky=tk.NSEW, padx=2, pady=4)
 
 
-
-    
-    # cap = cv2.VideoCapture(1)
-    # cam_label = tk.Label(window)
-
-    # cam_label.grid(row=0, column=0, sticky=tk.NSEW, rowspan=5)
-
-    # global rectangle_colour
-    # rectangle_colour = (255,0,0)
-    # def frame_capture():
-    #     global rectangle_colour
-    #     # to capture live feed we essentially need to convert to picture frame by frame
-    #     frame = cap.read()[1]
-        
-    #     ### drawing a box around the detected face ###
-    #     haar_get = os.path.join("cascades", "data", "haarcascade_frontalface_default.xml")
-    #     haar_cascade = cv2.CascadeClassifier(haar_get)
-    #     # converting to greyscale
-    #     grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #     # detect the face
-    #     faces = haar_cascade.detectMultiScale(grey, scaleFactor=1.5, minNeighbors=5)
-        
-    #     # get the co-ordinates and draw around them
-    #     for (x,y,w,h) in faces:
-    #         width_cords = x+w
-    #         height_cords = y+h
-    #         cv2.rectangle(frame, (x,y), (width_cords,height_cords), rectangle_colour, 2) # co-ords are from start point to end point 
-
-        
-    #     frame = cv2.resize(frame, (width_win_scale,height_win_scale))
-    #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #     img = Image.fromarray(frame)
-
-    #     img_tk = ImageTk.PhotoImage(image=img)
-        
-
-    #     cam_label.img_tk = img_tk
-    #     cam_label.configure(image=img_tk)
-
-    #     cam_label.after(10, frame_capture)
-        
-    # frame_capture()        
-
-    # window.mainloop()
-
-
-
-    # match_label = customtkinter.CTkLabel(window, text=match, corner_radius=0, fg_color=match_colour, text_font=("Helvetica",60))
-
-
-# ########## Image collection ##########
-# # collect live image
-# def collect_live():
-#     global cap
-    
-#     IMG_PATH = os.path.join("application_data", "input_image")
-
-#     while cap.isOpened():
-#         ret, frame = cap.read()
-#         # Cut down frame to 250x250px
-#         frame = frame[120 : 120 + 250, 200 : 200 + 250, :]
-
-#         # Collect anchors
-#         for image in os.listdir(IMG_PATH):
-#             image_remove = os.path.join(IMG_PATH, image)
-#             os.remove(image_remove)
-#         for i in range(1):
-#             # Create the unique file path
-#             imgname = os.path.join(IMG_PATH, "input_img.jpg")
-#             # Write out anchor image
-#             cv2.imwrite(imgname, frame)
-#         break
-
-#     # wrtie the image collected
-#     for image in os.listdir(IMG_PATH):
-#         global live_image_cap
-#         live_image_cap = os.path.join(IMG_PATH, image)
-
-#     print("done")
-
-# # collect passport image
-# def collect_passport():
-    
-#     cap = cv2.VideoCapture(3)
-#     VER_PATH = os.path.join("application_data", "verification_images")
-    
-#     while cap.isOpened(): 
-#         ret, frame = cap.read()
-#         # Cut down frame to 250x250px
-#         frame = frame[120:120+250,200:200+250, :]
-        
-#         # Collect anchors 
-#         for image in os.listdir(VER_PATH):
-#             image_remove = os.path.join(VER_PATH, image)
-#             os.remove(image_remove)
-#         for image in os.listdir(VER_PATH):
-#             image_remove = os.path.join(VER_PATH, image)
-#             os.remove(image_remove)
-#         for i in range(50):
-#             # Create the unique file path 
-#             imgname = os.path.join(VER_PATH, "{}.jpg".format(uuid.uuid1()))
-#             # Write out anchor image
-#             cv2.imwrite(imgname, frame)
-
-#         break
-        
-#     # write the image collected
-#     for image in os.listdir(VER_PATH):
-#         global passport_image_cap
-#         passport_image_cap = os.path.join(VER_PATH, image)
-
-#     print("done")
-
-
-    
-
-      
 compare_faces()

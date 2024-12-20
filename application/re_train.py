@@ -16,7 +16,7 @@ def re_train():
         def call(self, input_embedding, validation_embedding):
             return tf.math.abs(input_embedding - validation_embedding)
 
-    siamese_model = tf.keras.models.load_model("siamesemodel_2.h5", custom_objects={"L1Dist":L1Dist, "BinaryCrossentropy":tf.losses.BinaryCrossentropy})
+    siamese_model = tf.keras.models.load_model("siamese_model.h5", custom_objects={"L1Dist":L1Dist, "BinaryCrossentropy":tf.losses.BinaryCrossentropy})
 
     # image paths
     ANC_PATH = os.path.join("data", "anchor")
