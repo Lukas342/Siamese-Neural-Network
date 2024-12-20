@@ -1,0 +1,1 @@
+the images in the application data were the old shapes, so it was comparing wrong sizes
