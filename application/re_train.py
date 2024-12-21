@@ -115,7 +115,9 @@ def re_train():
 
 
     EPOCHS = 50 # num times we will run through the training data
-    #train(train_data, EPOCHS)
+    train(train_data, EPOCHS)
+
+    siamese_model.compile(optimizer=opt, loss=binary_loss, metrics=['accuracy']) 
 
     siamese_model.save("siamese_model.h5")
 

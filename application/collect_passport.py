@@ -3,8 +3,9 @@ import os
 import uuid
 
 def collect_passport():
-    cap = cv2.VideoCapture(3)
-    POS_PATH = os.path.join("application_data", "verification_images")
+    cap = cv2.VideoCapture(1)
+
+    POS_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\\verification_images")
 
     while cap.isOpened(): 
         ret, frame = cap.read()
@@ -27,6 +28,5 @@ def collect_passport():
         global passport_image_cap
         passport_image_cap = os.path.join(POS_PATH, image)
         
-    print("done")
 
 collect_passport()
