@@ -1,32 +1,33 @@
 import cv2
 import os
 import uuid
+   
 
 def collect_passport():
+
+    POS_PATH = os.path.abspath("application\\application_data\\verification_images")
+    # Establish a connection to the webcam
     cap = cv2.VideoCapture(1)
-
-    POS_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\\verification_images")
-
     while cap.isOpened(): 
         ret, frame = cap.read()
+    
         # Cut down frame to 250x250px
         frame = frame[120:120+250,200:200+250, :]
         
         # Collect anchors 
-        for image in os.listdir(POS_PATH):
-            image_remove = os.path.join(POS_PATH, image)
-            os.remove(image_remove)
-        for i in range(300):
+        if cv2.waitKey(1) & 0XFF == ord('p'):
             # Create the unique file path 
-            imgname = os.path.join(POS_PATH, "{}.jpg".format(uuid.uuid1()))
+            imgname = os.path.join(POS_PATH, '{}.jpg'.format(uuid.uuid1()))
             # Write out anchor image
             cv2.imwrite(imgname, frame)
-        break
+            break
         
-    # write the image collected
-    for image in os.listdir(POS_PATH):
-        global passport_image_cap
-        passport_image_cap = os.path.join(POS_PATH, image)
-        
+        # Show image back to screen
+        cv2.imshow('Image Collection', frame)
+
+    # Release the webcam
+    cap.release()
+    # Close the image show frame
+    cv2.destroyAllWindows()
 
 collect_passport()

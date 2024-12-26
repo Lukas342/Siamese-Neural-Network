@@ -72,14 +72,13 @@ def compare_faces():
     def button_pressed():
         # collects the images
         collect_live()
-        collect_passport()
 
         ########## MAKING PREDICTION ##########
-        detection_threshold = 0.1
-        verification_threshold = 0.1
+        detection_threshold = 0.7
+        verification_threshold = 0.8
         # changes images to appropriate format 
-        IMG_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\input_image")
-        VER_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\\verification_images")
+        IMG_PATH = os.path.abspath("application\\application_data\input_image")
+        VER_PATH = os.path.abspath("application\\application_data\\verification_images")
 
         results = []
         for image in os.listdir(VER_PATH):
@@ -91,9 +90,10 @@ def compare_faces():
         # comparing results to our required thresholds
         detection = np.sum(np.array(results) > detection_threshold)
         print(np.array(results))
-        print(detection)
         verification = detection / len(os.listdir(VER_PATH))    
+        print("Verification: ", verification)
         verified = verification > verification_threshold
+        print("Verified: ", verified)
 
         global match
         global match_colour
@@ -110,8 +110,11 @@ def compare_faces():
         match_label.configure(text=match, fg_color=match_colour)
 
         # adding the passport img to window
-        passport_img = Image.open(passport_image_cap)
-        passport_img = passport_img.resize((300, 300))
+        passport_img_path = os.path.abspath("application\\application_data\\verification_images\passport_img.jpg")
+        passport_img = Image.open(passport_img_path)
+
+        passport_img = passport_img.resize((300, 300)) 
+
         passport_img_tk = ImageTk.PhotoImage(image=passport_img)
         passport_label.passport_img_tk = passport_img_tk 
         passport_label.configure(image=passport_img_tk)
@@ -206,7 +209,7 @@ def compare_faces():
 # collect live image
 def collect_live():
     global cap
-    ANC_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\input_image")
+    ANC_PATH = os.path.abspath("application\\application_data\input_image")
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -228,42 +231,3 @@ def collect_live():
     for image in os.listdir(ANC_PATH):
         global live_image_cap
         live_image_cap = os.path.join(ANC_PATH, image)
-
-    print("done")
-
-# collect passport image
-def collect_passport():
-    cap = cv2.VideoCapture(3)
-
-    POS_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\\verification_images")
-    NEG_PATH = os.path.abspath("D:\Github\Siamese-neural-network\\application_data\\negative_images")
-
-    while cap.isOpened(): 
-        ret, frame = cap.read()
-        # Cut down frame to 250x250px
-        frame = frame[120:120+250,200:200+250, :]
-
-        # Collect anchors 
-        for image in os.listdir(POS_PATH):
-            image_remove = os.path.join(POS_PATH, image)
-            os.remove(image_remove)
-        for image in os.listdir(NEG_PATH):
-            image_remove = os.path.join(NEG_PATH, image)
-            os.remove(image_remove)
-        for i in range(50):
-            # Create the unique file path 
-            imgname = os.path.join(POS_PATH, "{}.jpg".format(uuid.uuid1()))
-            # Write out anchor image
-            cv2.imwrite(imgname, frame)
-            imgname2 = os.path.join(NEG_PATH, "{}.jpg".format(uuid.uuid1()))
-            cv2.imwrite(imgname2, frame)
-        break
-
-    # write the image collected
-    for image in os.listdir(POS_PATH):
-        global passport_image_cap
-        passport_image_cap = os.path.join(POS_PATH, image)
-
-    print("done")
-
-compare_faces()
