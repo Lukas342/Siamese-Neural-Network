@@ -22,6 +22,9 @@ def collect_passport():
             cv2.imwrite(imgname, frame)
             break
         
+        if cv2.waitKey(1) & 0XFF == ord('q'):
+            break
+
         # Show image back to screen
         cv2.imshow('Image Collection', frame)
 
@@ -29,5 +32,3 @@ def collect_passport():
     cap.release()
     # Close the image show frame
     cv2.destroyAllWindows()
-
-collect_passport()

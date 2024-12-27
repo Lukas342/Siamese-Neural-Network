@@ -5,9 +5,6 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Layer, Conv2D, Dense, MaxPooling2D, Input, Flatten
 import tensorflow as tf
 
-import shutil
-import add_database
-
 def re_train():
     # loads our model
     class L1Dist(Layer):
