@@ -13,6 +13,7 @@ from PIL import ImageTk, Image
 import pyautogui
 import numpy as np
 
+import re_train
 
 def compare_faces():
     global cap
@@ -124,11 +125,28 @@ def compare_faces():
         input_img = input_img.resize((300, 300))
         input_img_tk = ImageTk.PhotoImage(image=input_img)
         input_label.input_img_tk = input_img_tk
-        input_label.configure(image=input_img_tk)    
+        input_label.configure(image=input_img_tk)
 
+    def retrain_button_pressed():
+        # Generate unique filenames using uuid
+        input_img_filename = str(uuid.uuid4()) + ".jpg"
+        passport_img_filename = str(uuid.uuid4()) + ".jpg"
+
+        # Move input_img.jpg to data/positive with new filename
+        input_img_path = os.path.abspath("application\\application_data\\input_image\\input_img.jpg")
+        positive_path = os.path.abspath("data\\positive")
+        os.rename(input_img_path, os.path.join(positive_path, input_img_filename))
+
+        # Move passport_img.jpg to data/anchor with new filename
+        passport_img_path = os.path.abspath("application\\application_data\\verification_images\\passport_img.jpg")
+        anchor_path = os.path.abspath("data\\anchor")
+        os.rename(passport_img_path, os.path.join(anchor_path, passport_img_filename))
+
+        # Call the re_train function
+        re_train.re_train()
 
     ########## GUI ##########
-    match = "Face recogniton"
+    match = "Face recognition"
     match_colour = "#000000"
 
     # place the buttons
@@ -137,6 +155,9 @@ def compare_faces():
 
     compare_button = buttons("Compare Face", 3, 1, button_pressed)
     compare_button.button_create()
+
+    retrain_button = buttons("Retrain", 4, 1, retrain_button_pressed)
+    retrain_button.button_create()
 
     # takes screen size
     width, height = pyautogui.size()
